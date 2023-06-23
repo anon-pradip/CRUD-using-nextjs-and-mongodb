@@ -15,3 +15,33 @@ export const POST = async (req) => {
     );
   }
 };
+
+export const GET = async (req, res) => {
+  await connectMongoDB();
+  try {
+    const topics = await Topic.find();
+    return NextResponse.json(topics);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Failed to fetch topics" },
+      { status: 500 }
+    );
+  }
+};
+
+export const DELETE = async (req) => {
+  const id = req.nextUrl.searchParams.get("id");
+  await connectMongoDB();
+  try {
+    await Topic.findByIdAndDelete(id);
+    return NextResponse.json(
+      { message: "Successfully deleted te topic" },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Failed to delete topic" },
+      { status: 500 }
+    );
+  }
+};
